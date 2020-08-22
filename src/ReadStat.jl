@@ -63,7 +63,7 @@ mutable struct ReadStatDataFrame
     measures::Vector{Cint}
     alignments::Vector{Cint}
     val_label_keys::Vector{String}
-    val_label_dict::Dict{String, Dict{Any,String}}
+    val_label_dict::Dict{String,Dict{Any,String}}
     rows::Int
     columns::Int
     filelabel::String
@@ -74,7 +74,7 @@ mutable struct ReadStatDataFrame
 
     ReadStatDataFrame() = 
         new(Any[], Symbol[], DataType[], String[], String[], Csize_t[], Cint[], Cint[],
-        String[], Dict{String, Dict{Any,String}}(), 0, 0, "", Dates.unix2datetime(0), 0, Cint[], Bool[])
+        String[], Dict{String,Dict{Any,String}}(), 0, 0, "", Dates.unix2datetime(0), 0, Cint[], Bool[])
 end
 
 include("C_interface.jl")
@@ -191,7 +191,7 @@ function handle_value!(obs_index::Cint, variable::Ptr{Nothing},
         readstat_value_is_missing(value, C_NULL)
     end
 
-    if type_as_int==READSTAT_TYPE_DOUBLE
+    if type_as_int == READSTAT_TYPE_DOUBLE
         col_float64 = data[var_index]::DataValueVector{Float64}
 
         if ismissing
@@ -199,7 +199,7 @@ function handle_value!(obs_index::Cint, variable::Ptr{Nothing},
         else
             readfield!(col_float64, obs_index + 1, value)
         end
-    elseif type_as_int==READSTAT_TYPE_INT32
+    elseif type_as_int == READSTAT_TYPE_INT32
         col_int32 = data[var_index]::DataValueVector{Int32}
 
         if ismissing
@@ -207,7 +207,7 @@ function handle_value!(obs_index::Cint, variable::Ptr{Nothing},
         else
             readfield!(col_int32, obs_index + 1, value)
         end
-    elseif type_as_int==READSTAT_TYPE_STRING
+    elseif type_as_int == READSTAT_TYPE_STRING
         col_string = data[var_index]::DataValueVector{String}
 
         if ismissing
@@ -215,7 +215,7 @@ function handle_value!(obs_index::Cint, variable::Ptr{Nothing},
         else
             readfield!(col_string, obs_index + 1, value)
         end
-    elseif type_as_int==READSTAT_TYPE_CHAR
+    elseif type_as_int == READSTAT_TYPE_CHAR
         col_int8 = data[var_index]::DataValueVector{Int8}
 
         if ismissing
@@ -223,7 +223,7 @@ function handle_value!(obs_index::Cint, variable::Ptr{Nothing},
         else
             readfield!(col_int8, obs_index + 1, value)
         end
-    elseif type_as_int==READSTAT_TYPE_INT16
+    elseif type_as_int == READSTAT_TYPE_INT16
         col_int16 = data[var_index]::DataValueVector{Int16}
 
         if ismissing
@@ -231,7 +231,7 @@ function handle_value!(obs_index::Cint, variable::Ptr{Nothing},
         else
             readfield!(col_int16, obs_index + 1, value)
         end
-    elseif type_as_int==READSTAT_TYPE_FLOAT
+    elseif type_as_int == READSTAT_TYPE_FLOAT
         col_float32 = data[var_index]::DataValueVector{Float32}
 
         if ismissing
@@ -324,4 +324,4 @@ read_sav(filename::AbstractString) = read_data_file(filename, Val(:sav))
 read_por(filename::AbstractString) = read_data_file(filename, Val(:por))
 read_sas7bdat(filename::AbstractString) = read_data_file(filename, Val(:sas7bdat))
 
-end #module ReadStat
+end # module ReadStat
